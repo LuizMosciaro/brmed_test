@@ -1,0 +1,60 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Login {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Page content -->
+<div class="container mt--8 pb-3">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-lg-8 col-md-7">
+      <div class="card bg-secondary border-0 mb-3">
+
+        <!-- Chartjs libraries -->
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+        <script>
+
+          // Dados para o gráfico
+          var data = {
+            'categories': {{ dates|safe }},
+            'rates': {{ rates|safe }},
+          };
+
+          // Crie o gráfico Highcharts
+          Highcharts.chart('chartContainer', {
+            title: {
+              text: 'Gráfico de Cotações - {{ text|safe }}'
+            },
+            xAxis: {
+              categories: data['categories']
+            },
+            yAxis: {
+              title: {
+                text: '{{ text|safe }}'
+              }
+            },
+            series: [{
+              name: 'Cotação da moeda',
+              data: data['rates']
+            }]
+          });
+        </script>
+        <div class="row justify-content-center">
+          <div class="col-md-4">
+            <form action="{% url 'home' %}" method="get">
+              <div class="text-center">
+                <button type="submit" class="btn btn-dark btn-block mb-3">Voltar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock content %}

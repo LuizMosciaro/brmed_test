@@ -1,0 +1,101 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Login {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+  $(function () {
+    $(".datepicker").datepicker({
+      dateFormat: 'dd/mm/yy',
+      changeMonth: true,
+      changeYear: true
+    });
+  });
+</script>
+<!-- Page content -->
+<div class="container mt--8 pb-3">
+  <div class="row justify-content-center align-items-center"> <!-- Adicionado align-items-center -->
+    <div class="col-lg-5 col-md-7">
+      <div class="card bg-secondary border-0 mb-0">
+
+        <div class="card-body px-lg-5 py-lg-4">
+          <div class="text-center text-muted mb-4">
+            <small>Escolha as datas</small>
+            <br>
+            <small>(A diferença deve ser menor ou igual a 5 dias)</small>
+          </div>
+
+          {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}" {% endif %}>
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <form method="POST" action="{% url 'home' %}">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+              <div class="input-group input-group-merge input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input type="text" class="datepicker form-control" id="start_date" name="start_date"
+                  placeholder="Data Inicial" required><br>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <div class="input-group input-group-merge input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                </div>
+                <input type="text" class="datepicker form-control" id="end_date" name="end_date"
+                  placeholder="Data Final" required><br>
+              </div>
+            </div>
+
+            <div class="form-group text-center">
+              <small>Escolha para qual moeda quer converter o Dólar</small>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input my-4" type="radio" name="inlineRadioOptions" id="inlineRadioOptions" value="BRL" required>
+                <label class="form-check-label" for="BRL">Real</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input my-4" type="radio" name="inlineRadioOptions" id="inlineRadioOptions" value="EUR" required>
+                <label class="form-check-label" for="EUR">Euro</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input my-4" type="radio" name="inlineRadioOptions" id="inlineRadioOptions" value="JPY" required>
+                <label class="form-check-label" for="JPY">Iene</label>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <small>Últimas 3 consultas:</small>
+              {% for item in consults %}
+              <br>
+              <a href="{% url 'chart_view' %}?coin={{ item.coin }}&dates={{ item.dates }}&rates={{ item.rates }}" target="_blank">
+                  <small>{{ item.coin }}</small>
+                </a>
+              {% endfor %}
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary my-0">Gerar Cotação</button>
+            </div>
+          </form>
+
+        </div>        
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
