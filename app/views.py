@@ -58,6 +58,12 @@ class HomeView(View):
                 # Exibir uma mensagem de erro caso ocorra um problema na consulta
                 messages.warning(request, quotes_list)
                 return render(request, 'home/index.html')
+            
+            #Certificando que a data final nao pode ser anterior a data inicial
+            if datetime.strptime(date1, '%d/%m/%Y') > datetime.strptime(date2, '%d/%m/%Y'):
+                messages.warning(request, 'A data inicial escolhida é menor que a data final')
+                return render(request, 'home/index.html')
+
             else:
                 dates = []
                 rates = []
